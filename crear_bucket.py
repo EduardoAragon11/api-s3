@@ -11,7 +11,7 @@ def lambda_handler(event, context):
     response = client.create_bucket(
         Bucket=nombre_bucket,
         CreateBucketConfiguration={
-            'LocationConstraint': 'us-east-1'  # Cambiar si se necesita otra región
+            'LocationConstraint': 'us-east-2'  # Cambiar si se necesita otra región
         }
     )
 
