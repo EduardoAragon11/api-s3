@@ -10,7 +10,6 @@ def lambda_handler(event, context):
     # Proceso: Crear el bucket
     response = client.create_bucket(
         Bucket=nombre_bucket,
-        GrantFullControl='id=634152101290',
         CreateBucketConfiguration={
             'LocationConstraint': 'us-east-1'
         },
