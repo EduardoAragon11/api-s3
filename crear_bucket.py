@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     # Proceso: Crear el bucket
     response = client.create_bucket(
         Bucket=nombre_bucket,
-        GrantFullControl='id=634152101290',
+        GrantFullControl='id="634152101290"',
         ObjectOwnership='BucketOwnerPreferred'
     )
 
