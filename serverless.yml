@@ -51,4 +51,7 @@ functions:
           path: /s3/bucket/directorio/file
           method: post
           cors: true
-          integration: lambda
+          request:
+            contentHandling: CONVERT_TO_BINARY  # Enable binary support
+          binaryMediaTypes:
+            - multipart/form-data
