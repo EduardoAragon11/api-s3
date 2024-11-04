@@ -9,7 +9,9 @@ provider:
   timeout: 30
   iam:
     role: arn:aws:iam::634152101290:role/LabRole
-
+  apiGateway:
+    binaryMediaTypes:
+      - multipart/form-data
 functions:
   lista_buckets:
     handler: lista_buckets.lambda_handler
@@ -51,7 +53,3 @@ functions:
           path: /s3/bucket/directorio/file
           method: post
           cors: true
-          request:
-            contentHandling: CONVERT_TO_BINARY  # Enable binary support
-          binaryMediaTypes:
-            - multipart/form-data
