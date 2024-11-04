@@ -1,39 +1,45 @@
-import boto3
+import json
 import logging
+import boto3
+import os
+import base64
+from botocore.exceptions import ClientError
+from urllib.parse import parse_qs
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+s3_client = boto3.client('s3')
 
 def lambda_handler(event, context):
+    """Lambda function to upload a file to S3 from a form-data POST request
+
+    :param event: API Gateway Lambda Proxy Input Format (contains the uploaded file)
+    :param context: Lambda Context runtime methods and attributes
+    :return: The response to the API Gateway
+    """
+    
+    bucket_name = "eaa-catalogo-productos"
+
     try:
-        # Initialize the S3 client
-        s3 = boto3.client('s3')
-
-        # Log the incoming event
-        logger.info("Received event: %s", event)
-
-        # Extract the necessary parameters
-        nombre_bucket = event['body']['bucket']
-        directorio = event['body']['directorio']
-        file_name = event['body']['file_name']
-        file_content = event['body']['file_content']
-
-        # Log the parameters
-        logger.info("Bucket: %s, Directorio: %s, File Name: %s", nombre_bucket, directorio, file_name)
-
-        # Handle the file upload to S3
-        key = f"{directorio}{file_name}" if directorio else file_name
-        response = s3.put_object(Bucket=nombre_bucket, Key=key, Body=file_content)
-
+        # Extract the content-type from headers
+        content_type = event['headers']['content-type']
+        
+        # Get the file content from the event (API Gateway sends base64-encoded data)
+        file_data = base64.b64decode(event['body'])
+        
+        # For form-data processing, we need to extract the file from the body
+        # Assuming the file is under a key like "file" in the form-data
+        file_name = "uploaded_file"  # Define a file name or extract from form-data
+        
+        # Upload the file to S3
+        response = s3_client.put_object(Bucket=bucket_name, Key=file_name, Body=file_data)
+        
         return {
-            'statusCode': 200,
-            'body': f"File {file_name} uploaded to {key} in {nombre_bucket}."
+            "statusCode": 200,
+            "body": json.dumps("File uploaded successfully!")
         }
 
-    except Exception as e:
-        logger.error("Error occurred: %s", str(e))
+    except ClientError as e:
+        logging.error(e)
         return {
-            'statusCode': 500,
-            'body': "Internal server error",
-            'error': e
+            "statusCode": 500,
+            "body": json.dumps(f"File upload failed: {str(e)}")
         }
