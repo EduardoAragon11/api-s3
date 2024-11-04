@@ -1,30 +1,38 @@
 import boto3
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    # Inicializar el cliente S3
-    s3 = boto3.client('s3')
+    try:
+        # Initialize the S3 client
+        s3 = boto3.client('s3')
 
-    # Leer el bucket, directorio y el archivo del evento recibido
-    nombre_bucket = event['body']['bucket']
-    directorio = event['body']['directorio']  # e.g., 'my-folder/'
-    file_name = event['body']['file_name']    # e.g., 'example.txt'
+        # Log the incoming event
+        logger.info("Received event: %s", event)
 
-    # Extraer el contenido del archivo del evento
-    # Asumiendo que el contenido del archivo está en 'event['body']['file_content']'
-    file_content = event['body']['file_content']  # Este ya no estará en base64
+        # Extract the necessary parameters
+        nombre_bucket = event['body']['bucket']
+        directorio = event['body']['directorio']
+        file_name = event['body']['file_name']
+        file_content = event['body']['file_content']
 
-    # Si tienes un directorio, sube el archivo en esa carpeta
-    key = f"{directorio}{file_name}" if directorio else file_name
+        # Log the parameters
+        logger.info("Bucket: %s, Directorio: %s, File Name: %s", nombre_bucket, directorio, file_name)
 
-    # Subir el archivo a S3
-    response = s3.put_object(
-        Bucket=nombre_bucket,
-        Key=key,
-        Body=file_content
-    )
+        # Handle the file upload to S3
+        key = f"{directorio}{file_name}" if directorio else file_name
+        response = s3.put_object(Bucket=nombre_bucket, Key=key, Body=file_content)
 
-    # Salida
-    return {
-        'statusCode': 200,
-        'body': f"File {file_name} uploaded to {key} in {nombre_bucket}."
-    }
+        return {
+            'statusCode': 200,
+            'body': f"File {file_name} uploaded to {key} in {nombre_bucket}."
+        }
+
+    except Exception as e:
+        logger.error("Error occurred: %s", str(e))
+        return {
+            'statusCode': 500,
+            'body': "Internal server error"
+        }
