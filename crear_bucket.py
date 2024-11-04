@@ -15,17 +15,6 @@ def lambda_handler(event, context):
         }
     )
 
-    # Desbloquear el acceso público al bucket
-    client.put_public_access_block(
-        Bucket=nombre_bucket,
-        PublicAccessBlockConfiguration={
-            'BlockPublicAcls': False,
-            'IgnorePublicAcls': False,
-            'BlockPublicPolicy': False,
-            'RestrictPublicBuckets': False
-        }
-    )
-
     # Salida
     return {
         'statusCode': 200,
