@@ -1,12 +1,11 @@
 import boto3
 
-
 def lambda_handler(event, context):
 
 	bucket_name = "eaa-documentos-compras"
 	prefix = "probando/"
 
-	s3 = boto3.resource('s3')
+	s3_client = boto3.client('s3')
 
 	open('/tmp/hello.txt', 'w+').write('Hello, world!')
 
