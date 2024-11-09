@@ -7,7 +7,8 @@ def lambda_handler(event, context):
     get_file_content = event["content"]
     decode_content = base64.b64decode(get_file_content)
     bucket_name = "eaa-documentos-compras"
-    s3_upload = client.put_object(Bucket=bucket_name,Key="data.pdf",Body=decode_content)
+    #directorio = 
+    s3_upload = client.put_object(Bucket=bucket_name,Key="data_1.pdf",Body=decode_content)
 
     # TODO implement
     return {
