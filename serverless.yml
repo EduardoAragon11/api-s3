@@ -54,6 +54,3 @@ functions:
           request:
             template:
               application/pdf: '{"content": "$input.body"}'
-    apiGateway:
-      binaryMediaTypes:
-      - '*/*
