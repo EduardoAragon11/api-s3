@@ -9,6 +9,7 @@ provider:
   timeout: 30
   iam:
     role: arn:aws:iam::634152101290:role/LabRole
+
 functions:
   lista_buckets:
     handler: lista_buckets.lambda_handler
