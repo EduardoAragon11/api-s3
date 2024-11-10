@@ -9,9 +9,6 @@ provider:
   timeout: 30
   iam:
     role: arn:aws:iam::634152101290:role/LabRole
-  apiGateway:
-    binaryMediaTypes:
-      - '*/*'
 functions:
   lista_buckets:
     handler: lista_buckets.lambda_handler
@@ -57,3 +54,6 @@ functions:
           request:
             template:
               application/pdf: '{"content": "$input.body"}'
+    apiGateway:
+      binaryMediaTypes:
+      - '*/*
